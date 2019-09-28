@@ -36,7 +36,7 @@
 
     canvas {
       margin: auto;
-      display: block;
+      display: none;
       background: transparent;
     }
 
@@ -54,6 +54,11 @@
       outline: none;
     }
 
+    .generateImg {
+      display: block;
+      margin: auto;
+    }
+
   </style>
 </head>
 
@@ -66,14 +71,16 @@
   </ul>
   <button>上传图片</button>
   <canvas id="canvas" width="320" height="320"></canvas>
+  <img src="" class="generateImg">
   <input type="file" accept="image/*" hidden>
   <script>
     const ul = document.querySelector('ul')
+    const img = document.querySelectorAll('ul img')
+    const button = document.querySelector('button')
     const canvas = document.querySelector('#canvas')
     const ctx = canvas.getContext('2d')
-    const img = document.querySelectorAll('img')
+    const generateImg = document.querySelector('.generateImg')
     const fileUpload = document.querySelector('input')
-    const button = document.querySelector('button')
     let upLoadImg
     let avatarIcon
     // 画canvas
@@ -85,12 +92,16 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       ctx.fillStyle = 'rgba(255, 255, 255, 0)'
     }
+    function canvasToImg() {
+      generateImg.src = canvas.toDataURL("image/png")
+    }
     // 点击icon
     ul.addEventListener('click', function (event) {
       if (event.target.nodeName.toLowerCase() === 'img') {
         resetCanvas()
         upLoadImg && drawImage(upLoadImg)
         drawImage(event.target)
+        canvasToImg()
         avatarIcon = event.target
       }
     })
@@ -105,6 +116,7 @@
       img.onload = function () {
         drawImage(img)
         drawImage(avatarIcon)
+        canvasToImg()
         upLoadImg = img
       }
     })
@@ -112,6 +124,7 @@
     img[0].onload = function () {
       drawImage(img[0])
       avatarIcon = img[0]
+      canvasToImg()
     }
 
   </script>
