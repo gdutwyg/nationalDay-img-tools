@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>微信头像国庆生成工具</title>
+  <style>
+    html,
+    body {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      background: linear-gradient(#ff4b3d, #ffde28) #ffde28;
+    }
+
+    ul {
+      width: 360px;
+      margin: 0 auto 30px;
+      overflow: hidden;
+      list-style: none;
+      padding: 0;
+    }
+
+    ul li {
+      width: 25%;
+      float: left;
+      padding: 12px;
+      box-sizing: border-box;
+    }
+
+    ul li img {
+      width: 100%;
+    }
+
+    canvas {
+      margin: auto;
+      display: block;
+      background: transparent;
+    }
+
+    button {
+      margin: 40px auto;
+      display: block;
+      width: 240px;
+      height: 60px;
+      color: #fff;
+      background: linear-gradient(#ffe984, #ed8917) #ed8917;
+      font-size: 22px;
+      font-weight: bold;
+      border-radius: 12px;
+      border: none;
+      outline: none;
+    }
+
+  </style>
+</head>
+
+<body>
+  <ul>
+    <li><img src="./imgs/avatar-1.png"></li>
+    <li><img src="./imgs/avatar-2.png"></li>
+    <li><img src="./imgs/avatar-3.png"></li>
+    <li><img src="./imgs/avatar-4.png"></li>
+  </ul>
+  <button>上传图片</button>
+  <canvas id="canvas" width="320" height="320"></canvas>
+  <input type="file" accept="image/*" hidden>
+  <script>
+    const ul = document.querySelector('ul')
+    const canvas = document.querySelector('#canvas')
+    const ctx = canvas.getContext('2d')
+    const img = document.querySelectorAll('img')
+    const fileUpload = document.querySelector('input')
+    const button = document.querySelector('button')
+    let upLoadImg
+    let avatarIcon
+    // 画canvas
+    function drawImage(img) {
+      ctx.drawImage(img, 0, 0, 320, 320)
+    }
+    // 清空canvas
+    function resetCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      ctx.fillStyle = 'rgba(255, 255, 255, 0)'
+    }
+    // 点击icon
+    ul.addEventListener('click', function (event) {
+      if (event.target.nodeName.toLowerCase() === 'img') {
+        resetCanvas()
+        upLoadImg && drawImage(upLoadImg)
+        drawImage(event.target)
+        avatarIcon = event.target
+      }
+    })
+    // 上传图片
+    button.addEventListener('click', function () {
+      fileUpload.click()
+    })
+    // 监听文件变化
+    fileUpload.addEventListener('change', function () {
+      const img = new Image()
+      img.src = URL.createObjectURL(this.files[0])
+      img.onload = function () {
+        drawImage(img)
+        drawImage(avatarIcon)
+        upLoadImg = img
+      }
+    })
+    // 默认是第一张
+    img[0].onload = function () {
+      drawImage(img[0])
+      avatarIcon = img[0]
+    }
+
+  </script>
+</body>
+
+</html>
